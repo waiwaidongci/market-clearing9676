@@ -229,6 +229,7 @@ def analyze(rows, normalized_params):
         *_SUMMARY_COLUMNS[2:],
     )
     return {
+        "ready": ready,
         "state": "ok" if ready else "warning",
         "headline": f"{day} 结算检查{gate}，{counts[_MATCH]} 笔匹配、{missing} 笔单边缺失、{differences} 笔差异。",
         "note": "按入账日匹配，冲正与退扣按负分记账。差额为校园券账减食堂核销账。",

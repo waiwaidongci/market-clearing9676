@@ -8,7 +8,7 @@ from src.constants.enums import Review, Role, Status
 from src.controllers.auth import allow, current
 from src.domain.spec import SPEC
 from src.models.identity import User
-from src.models.jobs import Run
+from src.models.jobs import Delivery, Run
 from src.models.source import Dataset
 from src.schemas.requests import ReviewRequest, RunRequest
 from src.services.audit import record
@@ -55,10 +55,17 @@ def export(run_id: int, db: Session = Depends(connection), actor: User = Depends
     item = require_job(db, run_id)
     if not item.export_file:
         raise HTTPException(409, '此记录尚无可下载结果')
-    path = ARTIFACTS / item.export_file
+    delivered = db.scalar(select(Delivery.export_file).where(Delivery.run_id == item.id,
+                                                             Delivery.state == 'delivered'))
+    # Once a day has shipped, re-downloads replay the delivered artifact, not a later attempt.
+    name = delivered or item.export_file
+    path = ARTIFACTS / name
     if not path.is_file():
         raise HTTPException(410, '导出文件已不可用，请重新运行')
-    return FileResponse(path, media_type='text/csv', filename=f'{SPEC["short_name"]}-{item.id}.csv')
+    report_day = (item.params or {}).get(SPEC['schedule_date_param'])
+    filename = f'{SPEC["short_name"]}-{report_day or item.id}.csv'
+    return FileResponse(path, media_type='text/csv', filename=filename,
+                        headers={'Cache-Control': 'no-store', 'ETag': f'"{name}"'})
 
 
 @router.post('/{run_id}/review')

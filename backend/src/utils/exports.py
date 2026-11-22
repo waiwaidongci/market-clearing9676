@@ -1,4 +1,5 @@
 import csv
+from uuid import uuid4
 from src.config.settings import ARTIFACTS
 
 
@@ -11,7 +12,8 @@ def safe_cell(value):
 
 def write_report(run_id, attempt, result):
     ARTIFACTS.mkdir(parents=True, exist_ok=True)
-    name = f'analysis-{run_id}-{attempt}.csv'
+    # A fresh name per write keeps an already-delivered artifact immutable across recomputes.
+    name = f'analysis-{run_id}-{attempt}-{uuid4().hex[:12]}.csv'
     path = ARTIFACTS / name
     staging = path.with_suffix('.tmp')
     with staging.open('w', encoding='utf-8-sig', newline='') as output:

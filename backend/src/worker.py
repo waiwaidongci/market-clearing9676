@@ -1,7 +1,7 @@
 import logging
 import time
 from pathlib import Path
-from src.services.execution import claim, execute, materialize_due
+from src.services.execution import advance, claim, execute, materialize_due
 from src.utils.wakeup import wait
 
 logging.basicConfig(level=logging.INFO)
@@ -13,10 +13,12 @@ def main():
     while True:
         try:
             materialize_due()
+            advance()
             lease = claim()
             heartbeat.touch()
             if lease:
                 execute(lease)
+                advance()
                 heartbeat.touch()
             else:
                 wait()

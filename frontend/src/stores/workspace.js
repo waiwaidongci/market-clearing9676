@@ -16,7 +16,9 @@ export const workspace = {
   audit: () => call('/audit'),
   schedules: () => call('/schedules'),
   deliveries: () => call('/deliveries'),
+  settlementDays: () => call('/settlement-days'),
   schedule: data => call('/schedules', data),
   disable: id => call(`/schedules/${id}/disable`, {}),
+  retryDay: id => call(`/settlement-days/${id}/retry`, {}),
   download: (path, filename) => saveFile(path, session.token, filename),
 };

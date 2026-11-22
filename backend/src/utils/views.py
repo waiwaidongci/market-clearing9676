@@ -11,6 +11,7 @@ def run(item, detail=False):
                  'author': item.author, 'review': item.review, 'decision': item.decision,
                  'created_at': iso(item.created_at), 'finished_at': iso(item.finished_at),
                  'scheduled_at': iso(item.scheduled_at), 'schedule_id': item.schedule_id,
+                 'settlement_day_id': item.settlement_day_id,
                  'has_export': bool(item.export_file), 'error': item.error}
     if detail:
         item_view.update(params=item.params, result=item.result, review_note=item.review_note)
@@ -26,4 +27,13 @@ def schedule(item):
 
 def delivery(item):
     return {'id': item.id, 'run_id': item.run_id, 'recipient': item.recipient,
-            'state': item.state, 'detail': item.detail, 'created_at': iso(item.created_at)}
+            'state': item.state, 'detail': item.detail, 'created_at': iso(item.created_at),
+            'report_day': item.report_day, 'dataset_id': item.dataset_id}
+
+
+def day(item, dataset_name=None):
+    return {'id': item.id, 'schedule_id': item.schedule_id, 'report_day': item.report_day,
+            'status': item.status, 'step': item.step, 'detail': item.detail,
+            'recipient': item.recipient, 'dataset_id': item.dataset_id, 'dataset_name': dataset_name,
+            'run_id': item.run_id, 'scheduled_at': iso(item.scheduled_at),
+            'delivered_at': iso(item.delivered_at), 'updated_at': iso(item.updated_at)}

@@ -13,6 +13,7 @@ from src.services.audit import record
 from src.services.datasets import save, template
 from src.services.validation import parse_rows
 from src.utils import views
+from src.utils.wakeup import wake
 
 router = APIRouter()
 
@@ -51,4 +52,7 @@ def upload(body: Upload, db: Session = Depends(connection),
     if created:
         record(db, actor.username, 'dataset.imported', item.id, rows=item.row_count)
     db.commit()
+    if created:
+        # A late or corrected import may unblock held settlement days.
+        wake()
     return {**views.dataset(item), 'created': created}
