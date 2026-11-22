@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+
+:root {
+  --paper: oklch(96.6% 0.018 54);
+  --ink: oklch(27% 0.039 54);
+  --muted: oklch(44% 0.047 54);
+  --panel: oklch(98.5% 0.01 54);
+  --line: oklch(83.5% 0.038 54);
+  --accent: oklch(73% 0.132 54);
+  --accent-ink: oklch(26% 0.069 54);
+  --accent-soft: oklch(92.5% 0.07 54);
+  --nav: oklch(24% 0.035 54);
+  --nav-ink: oklch(93% 0.039 54);
+  --display: 'IBM Plex Mono', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --body: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* finance */
+.main .header { border-bottom:4px double var(--ink); } .hero{border-left:4px double var(--line)}
+.table-wrap tbody tr:nth-child(even) { background-color: color-mix(in oklch, var(--accent-soft) 22%, var(--panel)); }
+.metrics, .table-wrap {font-variant-numeric:tabular-nums;}
